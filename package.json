@@ -1,0 +1,37 @@
+{
+  "name": "storypdf-web-creator",
+  "version": "1.0.0",
+  "description": "StoryPDF Web Creator creates a website dedicated to creating stories, such as outlines and the actual story, and turns the outline/story into a pdf that the user can download when they've completed their work.",
+  "main": "storyPDF-web-creator.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SarahStelljes/storyPDF-web-creator.git"
+  },
+  "keywords": [
+    "\"PDF",
+    "Creator\"",
+    "PDF",
+    "story",
+    "stories",
+    "authors",
+    "outlines",
+    "books"
+  ],
+  "author": "Sarah Elizabeth Stelljes",
+  "license": "BSL-1.0",
+  "bugs": {
+    "url": "https://github.com/SarahStelljes/storyPDF-web-creator/issues"
+  },
+  "homepage": "https://github.com/SarahStelljes/storyPDF-web-creator#readme",
+  "dependencies": {
+    "blob-stream": "^0.1.3",
+    "brfs": "^2.0.2",
+    "browserify": "^17.0.0",
+    "iconv-lite": "^0.6.3",
+    "inquirer": "^8.2.4",
+    "pdfkit": "^0.13.0"
+  }
+}
