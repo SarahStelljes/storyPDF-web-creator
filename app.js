@@ -354,14 +354,14 @@ const createCustomFiles = projectData => {
             if(err) throw err;
         });
         // enter root folder
-        process.chdir(projectData.fileDir+'/'+projectData.website);
+        process.chdir(projectData.fileDir+projectData.website);
     } else {
         // create website root folder
         fs.mkdir(projectData.fileDir+'/'+projectData.website+'/', err => {
             if(err) throw err;
         });
         // enter root folder
-        process.chdir(projectData.website+'/'+projectData.website);
+        process.chdir(projectData.website);
     }
     if(projectData.website.includes('_') && !projectData.website.includes('-')){
         const search = '_';
