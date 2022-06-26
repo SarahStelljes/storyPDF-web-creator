@@ -307,7 +307,6 @@ const chooseFileDirectory = projectData => {
             message: `
             Enter a save path. 
             *Note: typically you would start off with "C:", but this may not always be the case.
-            *Hint: if you want to save to this folder dir, then don't put any text in
             `
         },
         {
@@ -323,13 +322,6 @@ const chooseFileDirectory = projectData => {
                 const search = '\\';
                 const replaceWith = '/';
                 projectData.fileDir = dirData.dir.split(search).join(replaceWith);
-                if(projectData.template === 'custom'){
-                    createCustomFiles(projectData);
-                } else {
-                    continueEditingProjectData(projectData);
-                }
-            } else if (dirData.dir === ''){
-                projectData.fileDir = './'
                 if(projectData.template === 'custom'){
                     createCustomFiles(projectData);
                 } else {
