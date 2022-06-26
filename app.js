@@ -354,7 +354,7 @@ const createCustomFiles = projectData => {
             if(err) throw err;
         });
         // enter root folder
-        process.chdir(projectData.fileDir+projectData.website);
+        process.chdir(projectData.website);
     } else {
         // create website root folder
         fs.mkdir(projectData.fileDir+'/'+projectData.website+'/', err => {
@@ -378,6 +378,7 @@ const createCustomFiles = projectData => {
         projectData.website = projectData.website.split(search1).join(replaceWith);
         projectData.website = projectData.website.split(search2).join(replaceWith);
     }
+
     const pageHTML = generateCustomHtml(projectData);
     // generate index.html
     fs.writeFile('./index.html', pageHTML, err => {
@@ -392,7 +393,7 @@ const createCustomFiles = projectData => {
         if(err) throw err;
     })
     // make assets folder
-    fs.mkdir('./assets/', err => {
+    fs.mkdir('assets/', err => {
         if(err) throw err;
     });
 
@@ -400,13 +401,13 @@ const createCustomFiles = projectData => {
     process.chdir('assets');
 
     // make js folder
-    fs.mkdir('./js/', err=>{
+    fs.mkdir('js/', err=>{
         if(err) throw err;
     });
-    fs.mkdir('./css/', err=>{
+    fs.mkdir('css/', err=>{
         if(err) throw err;
     });
-    fs.mkdir('./website-imgs/', err=>{
+    fs.mkdir('website-imgs/', err=>{
         if(err) throw err;
     });
 
