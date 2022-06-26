@@ -354,7 +354,7 @@ const createCustomFiles = projectData => {
             if(err) throw err;
         });
         // enter root folder
-        process.chdir(projectData.fileDir+projectData.website);
+        process.chdir(projectData.fileDir+'/'+projectData.website);
     } else {
         // create website root folder
         fs.mkdir(projectData.fileDir+'/'+projectData.website+'/', err => {
