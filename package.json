@@ -32,6 +32,7 @@
     "browserify": "^17.0.0",
     "iconv-lite": "^0.6.3",
     "inquirer": "^8.2.4",
+    "npm-commands": "^1.1.0",
     "pdfkit": "^0.13.0"
   }
 }
