@@ -3,6 +3,11 @@ const process = require('process');
 const fs = require('fs');
 const npm = require('npm-commands');
 
+const generateCustomHtml = require('./templates/html-templates/custom-template/html-custom');
+const generateCustomPackage = require('./templates/json-package/custom-json-package');
+const generateCustomJS = require('./templates/js-templates/custom-template/js-custom');
+const generateGitIgnore = require('./templates/gitignore-template/gitignore-template');
+
 // begining function
 const promptUser = () => {
     return inquirer.prompt([
@@ -41,7 +46,9 @@ const promptProjectName = ownerData => {
         {
             type: 'input',
             name: 'websiteName',
-            message: 'What is the name of this website? Note: This will also be the name of the folder, so use underscores (_) and/or dashes (-) when necessary. (required)',
+            message: `What is the name of this website? 
+            Note: This will also be the name of the folder, so use underscores (_) 
+            and/or dashes (-) when necessary. (required)`,
             validate: projectName =>{
                 if(projectName){
                     return true;
@@ -96,24 +103,6 @@ const promptProjectName = ownerData => {
 //     })
 //     .then(projectData => {
 //         if(projectData.createOption === 'Create it Yourself'){
-//             fs.mkdir('./'+projectData.website+'/', err => {
-//                 if(err) throw err;
-//             });
-//             process.chdir(projectData.website);
-//             fs.mkdir('./assets/', err => {
-//                 if(err) throw err;
-//             });
-//             process.chdir('assets');
-//             fs.mkdir('./js/', err=>{
-//                 if(err) throw err;
-//             });
-//             fs.mkdir('./css/', err=>{
-//                 if(err) throw err;
-//             });
-//             fs.mkdir('./website-imgs/', err=>{
-//                 if(err) throw err;
-//             });
-//             console.log('Made website folders.');
 //         } else if(projectData.createOption === 'Choose'){
 //             chooseTemplates(projectData);
 //         }
@@ -222,18 +211,21 @@ const nameFilesCustom = projectData => {
         {
             type: 'input',
             name: 'jsFileName',
-            message: 'Name your JavaScript file. Do not worry about the .js part, we will add that ourselves.'
-        },
-        {
-            type: 'input',
-            name: 'cssFileName',
-            message: 'Name your CSS file. Do not worry about the .css part.'
+            message: 'Name your JavaScript file. Do not worry about the .js part, we will add that ourselves.',
+            validate: jsFileName => {
+                if(jsFileName){
+                    return true;
+                } else {
+                    console.log('The js file must have a name!')
+                    return false;
+                }
+            }
         },
         {
             type: 'confirm',
             name: 'confirmFileNames',
             message: 'Look over the names you typed. Are you sure this is what you want?',
-            default: true
+            default: false
         }
     ])
     .then(fileNameData => {
@@ -252,23 +244,47 @@ const nameFiles = projectData => {
         {
             type: 'input',
             name: 'jsFileName',
-            message: 'Name your JavaScript file. Do not worry about the .js part, we will add that ourselves.'
+            message: 'Name your JavaScript file. Do not worry about the .js part, we will add that ourselves.',
+            validate: jsFileName => {
+                if(jsFileName){
+                    return true;
+                } else {
+                    console.log('The js file must have a name!')
+                    return false;
+                }
+            }
         },
         {
             type: 'input',
             name: 'cssFileName',
-            message: 'Name your CSS file. Do not worry about the .css part.'
+            message: 'Name your CSS file. Do not worry about the .css part.',
+            validate: cssFileName => {
+                if(cssFileName){
+                    return true;
+                } else {
+                    console.log('The css file must have a name!')
+                    return false;
+                }
+            }
         },
         {
             type: 'input',
             name: 'htmlFileName',
-            message: 'Name your html file. Do not worry about the .html part. *Note: this is not for the index.html.'
+            message: 'Name your html file. Do not worry about the .html part. *Note: this is not for the index.html.',
+            validate: htmlFileName => {
+                if(htmlFileName){
+                    return true;
+                } else {
+                    console.log('The html file must have a name!')
+                    return false;
+                }
+            }
         },
         {
             type: 'confirm',
             name: 'confirmFileNames',
             message: 'Look over the names you typed. Are you sure this is what you want?',
-            default: true
+            default: false
         }
     ])
     .then(fileNameData => {
@@ -288,12 +304,17 @@ const chooseFileDirectory = projectData => {
         {
             type: 'input',
             name: 'dir',
-            message: 'Enter a save path. *Note: typically you would start off with "C:", but this may not always be the case.'
+            message: `
+            Enter a save path. 
+            *Note: typically you would start off with "C:", but this may not always be the case.
+            *Hint: if you want to save to this folder dir, then don't put any text in
+            `
         },
         {
             type: 'confirm',
             name: 'confirmDir',
-            message: 'Double check to make sure this is the correct directory. Do you wish to continue?'
+            message: 'Double check to make sure this is the correct directory. Do you wish to continue?',
+            default: false
         }
     ])
     .then(dirData => {
@@ -302,47 +323,106 @@ const chooseFileDirectory = projectData => {
                 const search = '\\';
                 const replaceWith = '/';
                 projectData.fileDir = dirData.dir.split(search).join(replaceWith);
-            }
-            if(projectData.template === 'custom'){
-                createCustomFiles(projectData);
+                if(projectData.template === 'custom'){
+                    createCustomFiles(projectData);
+                } else {
+                    continueEditingProjectData(projectData);
+                }
+            } else if (dirData.dir === ''){
+                projectData.fileDir = './'
+                if(projectData.template === 'custom'){
+                    createCustomFiles(projectData);
+                } else {
+                    continueEditingProjectData(projectData);
+                }
             } else {
-                continueCreating(projectData);
+                console.log('This is not a valid directory!');
+                chooseFileDirectory(projectData);
             }
         }
     })
 }
 
-// const chooseFileTypes = projectData =>{
-//     return inquirer.prompt([
-//         {
-//             type: 'checkbox',
-//             name: 'chosenTemplates',
-//             message: 'Choose the type of file of the template you want.',
-//             choices: ['JavaScript', 'HTML', 'CSS']
-//         },
-//         {
-//             type: 'confirm',
-//             name: 'confirmChosenTemplates',
-//             message: 'Are you sure you want these templates?',
-//             default: false
-//         }
-//     ])
-//     .then(fileData => {
-//         projectData.fileTypes = [];
-//         let chosenLength = fileData.chosenTemplates.length
-//         for(let i = 0; i < chosenLength; i++){
-//             if(fileData.chosenTemplates[i]==='JavaScript'){
-//                 projectData.fileTypes.push(projectData.template+'.js');
-//             } else if (fileData.chosenTemplates[i] === 'HTML'){
-//                 projectData.fileTypes.push(projectData.template+'.html');
-//             } else if (fileData.chosenTemplates[i] === 'CSS'){
-//                 projectData.fileTypes.push(projectData.template+'.css');
-//             }
-//         }
-//         console.log(projectData);
-//         console.log(projectData.fileTypes);
-//     });
-// }
+const createCustomFiles = projectData => {
+    const jsonPackage = generateCustomPackage();
+    const fileJS = generateCustomJS();
+    const gitignore = generateGitIgnore();
+
+    if(projectData.fileDir === './'){
+        // create website root folder
+        fs.mkdir(projectData.fileDir+projectData.website+'/', err => {
+            if(err) throw err;
+        });
+        // enter root folder
+        process.chdir(projectData.fileDir+projectData.website);
+    } else {
+        // create website root folder
+        fs.mkdir(projectData.fileDir+'/'+projectData.website+'/', err => {
+            if(err) throw err;
+        });
+        // enter root folder
+        process.chdir(projectData.website);
+    }
+    if(projectData.website.includes('_') && !projectData.website.includes('-')){
+        const search = '_';
+        const replaceWith = ' ';
+        projectData.website = projectData.website.split(search).join(replaceWith);
+    } else if (projectData.website.includes('-') && !projectData.website.includes('_')){
+        const search = '-';
+        const replaceWith = ' ';
+        projectData.website = projectData.website.split(search).join(replaceWith);
+    } else if (projectData.website.includes('_') && projectData.website.includes('-')){
+        const search1 = '_';
+        const search2 = '-';
+        const replaceWith = ' ';
+        projectData.website = projectData.website.split(search1).join(replaceWith);
+        projectData.website = projectData.website.split(search2).join(replaceWith);
+    }
+    const pageHTML = generateCustomHtml(projectData);
+    // generate index.html
+    fs.writeFile('./index.html', pageHTML, err => {
+        if(err) throw err;
+    });
+    // generate package.json
+    fs.writeFile('./package.json', jsonPackage, err => {
+        if(err) throw err;
+    })
+    // generate .gitignore
+    fs.writeFile('./.gitignore', gitignore, err => {
+        if(err) throw err;
+    })
+    // make assets folder
+    fs.mkdir('./assets/', err => {
+        if(err) throw err;
+    });
+
+    // enter the assets folder
+    process.chdir('assets');
+
+    // make js folder
+    fs.mkdir('./js/', err=>{
+        if(err) throw err;
+    });
+    fs.mkdir('./css/', err=>{
+        if(err) throw err;
+    });
+    fs.mkdir('./website-imgs/', err=>{
+        if(err) throw err;
+    });
+
+    // enter js folder
+    process.chdir('js');
+
+    // generate js file
+    fs.writeFile('./'+projectData.jsFileName+'.js', fileJS, err => {
+        if(err) throw err;
+    });
+
+    // exit js and assets folder
+    process.chdir('../../');
+
+    console.log('Made website folders and files.');
+}
 promptUser()
     .then(promptProjectName)
     .then(chooseTemplates)
