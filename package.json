@@ -2,7 +2,7 @@
   "name": "storypdf-web-creator",
   "version": "1.0.0",
   "description": "StoryPDF Web Creator creates a website dedicated to creating stories, such as outlines and the actual story, and turns the outline/story into a pdf that the user can download when they've completed their work.",
-  "main": "storyPDF-web-creator.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -32,6 +32,7 @@
     "browserify": "^17.0.0",
     "iconv-lite": "^0.6.3",
     "inquirer": "^8.2.4",
+    "npm-commands": "^1.1.0",
     "pdfkit": "^0.13.0"
   }
 }
